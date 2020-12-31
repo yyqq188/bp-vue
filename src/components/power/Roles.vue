@@ -12,7 +12,7 @@
       <!-- 添加角色按钮区域 -->
       <el-row>
         <el-col>
-          <el-button type="primary">添加角色</el-button>
+          <el-button type="primary" @click="addRolesDialogVisible">添加角色</el-button>
         </el-col>
       </el-row>
 
@@ -70,6 +70,19 @@
         <el-button type="primary" @click="allotRights">确 定</el-button>
       </span>
     </el-dialog>
+
+    <!-- 添加角色对话框 -->
+    <el-dialog
+      title="添加角色"
+      :visible.sync="addRolesdialogVisibles"
+      width="50%">
+      <div></div>
+      <div slot="footer">
+        <el-button @click="addRolesdialogVisibles = false">取 消</el-button>
+        <el-button type="primary" @click="addRolesdialogVisibles = false">确 定</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -91,7 +104,9 @@ export default {
       // 默认选中的节点Id值数组
       defKeys: [],
       // 当前即将分配权限的角色id
-      roleId: ''
+      roleId: '',
+      //添加角色对话框的变量
+      addRolesdialogVisibles:false
     }
   },
   created() {
@@ -191,6 +206,12 @@ export default {
       this.$message.success('分配权限成功！')
       this.getRolesList()
       this.setRightDialogVisible = false
+    },
+
+    //添加角色
+    addRolesDialogVisible(){
+      this.addRolesdialogVisibles = true
+
     }
   }
 }
