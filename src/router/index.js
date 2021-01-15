@@ -4,19 +4,21 @@ import Login from '../components/Login.vue'
 import Home from '../components/Home.vue'
 import Welcome from '../components/Welcome.vue'
 import User from '../components/user/Users.vue'
-import Rights from '../components/power/Rights.vue'
-import Roles from '../components/power/Roles.vue'
+import JobList from '../components/jobs/JobList.vue'
+import JobSet from '../components/jobs/JobSet.vue'
+import Logs from '../components/logs/Logs.vue'
+import SystemConfig from '../components/systemconf/SystemConfig.vue'
 import Cate from '../components/goods/Cate.vue'
 import Parmas from '../components/goods/Params.vue'
 import GoodsList from '../components/goods/List.vue'
+
+
+
 Vue.use(VueRouter)
 
 const routes = [
     { path: '/', redirect: '/login' },
-    {
-        path: '/login',
-        component: Login
-    },
+    { path: '/login',component: Login},
     {
         path: '/home',
         component: Home,
@@ -27,16 +29,24 @@ const routes = [
             },
             {
                 path: '/users',
-                component: User
+                component: User                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
 
             },
             {
-                path: '/rights',
-                component: Rights
+                path: '/jobs',                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+                component: JobList
             },
             {
-                path: '/roles',
-                component: Roles
+                path: '/jobset',
+                component: JobSet
+            },
+            {
+                path: '/logs',
+                component:Logs
+            },
+            {
+                path: '/system_config',
+                component: SystemConfig
             },
             {
                 path: '/categories',
@@ -60,8 +70,9 @@ router.beforeEach((to, from, next) => {
     //next是个函数,表示放行
     //一定要是单引号
     if (to.path === '/login') return next()
-    const tokenStr = window.sessionStorage.getItem('token')
-    if (!tokenStr) return next('/login')
+    //把有关token的先去掉
+    // const tokenStr = window.sessionStorage.getItem('token')
+    // if (!tokenStr) return next('/login')
     next()
 
 })

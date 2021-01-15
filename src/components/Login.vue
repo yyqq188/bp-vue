@@ -30,8 +30,8 @@ export default {
     data(){
         return {
             loginForm:{
-                username:'admin',
-                password:'123456'
+                username:'',
+                password:''
             },
             //表单的验证规则
             loginFormRules :{
@@ -48,6 +48,7 @@ export default {
     },
     methods:{
         resetLoginForm(){
+       
             this.$refs.loginFormRef.resetFields();
             
             
@@ -56,14 +57,16 @@ export default {
             this.$refs.loginFormRef.validate(async valid => {
                 if(!valid) return;//不发请求
                 const {data:res} = await this.$http.post("login",this.loginForm)
+                
+                console.log(res.data.token);
                 if(res.meta.status != 200) {
-                    this.$message.error("登录失败")
-                    
+                    return this.$message.error("登录失败")
                 }
                 this.$message.success('登录成功')
-                console.log(res);
+                
                 //把token保存到sessionStorage
                 window.sessionStorage.setItem("token",res.data.token)
+                
                 //登录到home页面
                 this.$router.push("/home")
                 

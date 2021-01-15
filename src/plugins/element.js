@@ -29,7 +29,10 @@ import {
     Tag,
     Tree,
     Alert,
-    Cascader
+    Cascader,
+    Select,
+    Option,
+    Upload
 } from 'element-ui'
 
 
@@ -60,6 +63,9 @@ Vue.use(Tag)
 Vue.use(Tree)
 Vue.use(Alert)
 Vue.use(Cascader)
+Vue.use(Select)
+Vue.use(Option)
+Vue.use(Upload)
 
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

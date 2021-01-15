@@ -6,7 +6,7 @@
     <el-header>
         <div>
             <img src="../assets/1462750208.jpg" class="logo-image" alt="">
-            <span>电商后台管理系统</span>
+            <span>FlinkSQL开发平台</span>
         </div>
         <el-button type="info" @click="logout">退出</el-button>
     </el-header>
@@ -60,11 +60,11 @@ export default {
         return {
             menulist:[],
             iconObj:{
-                '125':'iconfont icon-user',
+                '105':'iconfont icon-user',
                 '103':'iconfont icon-tijikongjian',
                 '101':'iconfont icon-shangpin',
                 '102':'iconfont icon-danju',
-                '145':'iconfont icon-baobiao'
+                '104':'iconfont icon-baobiao'
             },
             isCollapse:false,
             activePath:''
@@ -89,7 +89,7 @@ export default {
                 return this.$message.error(res.meta.msg)
             }
             this.menulist = res.data
-            // console.log(res);
+            console.log(this.menulist);
             
         },
         //菜单的折叠展开

@@ -14,7 +14,7 @@
             <el-row :gutter="20">
                 <el-col :span="7">
                     <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getUserList">
-                        <el-button  slot="append" icon="el-icon-search" @click="getUserList"></el-button>
+                        <el-button  slot="append" icon="el-icon-search" @click="getUserListLike"></el-button>
                     </el-input>
                 </el-col>
                 <el-col :span="4">
@@ -24,17 +24,17 @@
 
             <!-- 用户列表区 -->
             <el-table :data="userList" border stripe>
-                <el-table-column type="index" label="索引"></el-table-column>
-                <el-table-column prop="username" label="姓名"></el-table-column>
-                <el-table-column prop="email" label="邮箱"></el-table-column>
-                <el-table-column prop="mobile" label="电话"></el-table-column>
-                <el-table-column prop="role_name" label="角色"></el-table-column>
+                <el-table-column align="center" type="index" label="索引"></el-table-column>
+                <el-table-column align="center" prop="username" label="姓名"></el-table-column>
+                <el-table-column align="center" prop="email" label="邮箱"></el-table-column>
+                <el-table-column align="center" prop="mobile" label="电话"></el-table-column>
+                <el-table-column align="center" prop="role" label="角色"></el-table-column>
                 <el-table-column label="状态">
                     <template slot-scope="scope">
-                        <el-switch v-model="scope.row.mg_state" @change="userStatusChange(scope.row)"></el-switch>
+                        <el-switch v-model="scope.row.state" @change="userStatusChange(scope.row)"></el-switch>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" width="180px">
+                <el-table-column align="center" label="操作" width="180px">
                     <template slot-scope="scope">
                         <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.id)"></el-button>
                         <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteUserInfo(scope.row.id)"></el-button>
@@ -163,11 +163,11 @@ export default {
             addFormRules:{
                 username:[
                     {required: true, message:'请输入用户名', trigger: 'blur'},
-                    {required: true, min:3,max:10,message:'用户名在3到10个自建', trigger: 'blur'}
+                    {required: true, min:3,max:10,message:'用户名在3到10个字符', trigger: 'blur'}
                 ],
                 password:[
                     {required: true, message:'请输入密码', trigger: 'blur'},
-                    {required: true, min:6,max:15,message:'用户名在3到10个自建', trigger: 'blur'}
+                    {required: true, min:6,max:15,message:'密码在6到15个字符', trigger: 'blur'}
                 ],
                 email:[
                     {required: true, message:'请输入邮箱', trigger: 'blur'},
@@ -202,11 +202,23 @@ export default {
         this.getUserList()
     },
     methods:{
+
+        //模糊查询
+        async getUserListLike(){
+            const {data:res} = await this.$http.get('userslike/'+this.queryInfo.query)
+            if(res.meta.status !== 200){
+                return this.$message.error("获得用户模糊查询失败")
+            }
+            this.userList = res.data
+        },
+
+
+
         async getUserList(){
             const {data:res} =  await this.$http.get('users',{params:this.queryInfo})
             
             if(res.meta.status != 200) return this.$message.error("获取用户列表失败!")
-            this.userList = res.data.users
+            this.userList = res.data.content
             this.total = res.data.total
         },
         handleSizeChange(newSize){
@@ -221,9 +233,15 @@ export default {
         },
         //监听switch开关的改变
         async userStatusChange(userinfo){
-            const {data:res} = await this.$http.put(`users/${userinfo.id}/state/${userinfo.mg_state}`)
+            const {data:res} = await this.$http.put(`changestate/${userinfo.id}/state/${userinfo.state}`)
             if(res.meta.status != 200) {
-                userinfo.mg_state = !userinfo.mg_state
+                // if(userinfo.state === 'true'){
+                //     this.userinfo.state = false
+                // }else{
+                //      this.userinfo.state = true
+                // }
+                // this.getUserList()
+                this.userinfo.state = !userinfo.state
                 return this.$message.error("更新用户状态失败!")
             }
             return this.$message.success("更新用户状态成功")
@@ -236,7 +254,8 @@ export default {
         addUser(){
             this.$refs.addFormRef.validate(async valid=> {
                 if(!valid) return 
-                const {data:res} = await this.$http.post('users',this.addForm)
+                // const {data:res} = await this.$http.post('users',this.addForm)
+                const {data:res} = await this.$http.post('adduser',this.addForm)
                 if(res.meta.status !== 201) {
                     this.$message.error('添加用户失败')
                 }
