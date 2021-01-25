@@ -1,10 +1,5 @@
 <template>
-
-    
-
   <div>
-
-
     <!-- 面包屑导航区域 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
     <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
@@ -15,14 +10,14 @@
     <el-card>
         <el-form  ref="addFormRef" label-width="100px" label-position="top">
         <el-form-item label="任务名称" required>
-            <el-input v-model="addFormRef.flinkJobName" placeholder="任务名称"></el-input>
+            <el-input v-model="addForm.taskName" placeholder="任务名称"></el-input>
         </el-form-item>
         <el-form-item label="运行模式" required>
-            <el-input v-model="addFormRef.flinkRunModel" placeholder="运行模式"></el-input>
+            <el-input v-model="addForm.resourceMode" placeholder="运行模式"></el-input>
         </el-form-item>
         <el-form-item label="flink运行配置" required>
         
-            <el-select v-model="addFormRef.flinkRunConf" placeholder="flink运行配置">
+            <el-select v-model="addForm.taskConfig" placeholder="flink运行配置">
                 <el-option label="yarn-pre-job" value="yarn-pre-job"></el-option>
                 <el-option label="yarn-session" value="yarn-session"></el-option>
                 <el-option label="yarn-application" value="yarn-application"></el-option>
@@ -32,10 +27,10 @@
         
         </el-form-item>
         <el-form-item label="Checkpoint信息" required>
-            <el-input v-model="addFormRef.checkpointInfo" placeholder="Checkpoint信息"></el-input>
+            <el-input v-model="addForm.checkPointInfo" placeholder="Checkpoint信息"></el-input>
         </el-form-item>
         <el-form-item label="三方jar地址(自定义udf,连接器等jar地址,多个用换行)" required>
-            <el-input v-model="addFormRef.jarAddress"  :rows="3" type="textarea"></el-input>
+            <el-input v-model="addForm.jarsAddress"  :rows="3" type="textarea"></el-input>
         </el-form-item>
         <el-form-item label="SQL" required>
             <!-- 上传sql文件 -->
@@ -56,10 +51,19 @@
       </codemirror>
       <el-button size="small" type="primary" @click="jobAllConf">确定</el-button>
     </el-card>
+
+    
+    
   </div>
 </template>
 
 <script>
+    //   //传入JobList.vue
+    //   import JobListPage from "../../components/jobs/JobList.vue"
+      
+
+      
+
       import codemirror from "codemirror/lib/codemirror"
       require("codemirror/mode/clike/clike.js")
       require("codemirror/addon/edit/closebrackets.js")
@@ -90,31 +94,45 @@
                     autoCloseBrackets: true,// 自动补全括号
                     tabSize:3
                 },
-                addFormRef:{
+                addForm:{
                     //任务名称
-                    flinkJobName:'',
+                    taskName:'',
                     //运行模式
-                    flinkRunModel:'',
+                    resourceMode:'',
                     //运行配置
-                    flinkRunConf:'',
+                    taskConfig:'',
                     //Checkpoint信息
-                    checkpointInfo:'',
+                    checkPointInfo:'',
                     //第三方jar地址
-                    jarAddress:''
+                    jarsAddress:''
                     
                 },
-                // uploadUrl:'https://jsonplaceholder.typicode.com/posts/'
-                uploadUrl:'http://127.0.0.1:9992/bp/v1/uploadSqlFile'
-                
-                
-                
+                uploadUrl:'https://jsonplaceholder.typicode.com/posts/',
+                // uploadUrl:'http://127.0.0.1:9992/bp/v1/uploadSqlFile',
               }
           },
           methods:{
-              jobAllConf(){
-                  console.log("aaaa");
-                  
+              async jobAllConf(){
+                //   console.log("aaaa");
                 //   console.log(this.$refs.codeMirrorEditor.codemirror.getValue());
+                var flinkSql = this.$refs.codeMirrorEditor.codemirror.getValue()
+                this.addForm.flinkSql = flinkSql
+                const {data:res} = await this.$http.post('addtaskinfo',this.addForm)
+                
+                if(res.meta.status !== 200) {
+                    return this.$message.error('添加任务失败')
+                }
+                this.$message.success('添加任务成功')
+               
+            
+              },
+
+              async testButton(){
+                  const {data:res} = await this.$http.get("gettaskinfo")
+                  if(res.meta.status !== 200){
+                      return this.$message.error('错误')
+                  }
+                  this.$$message.success('成功')
               },
               
 

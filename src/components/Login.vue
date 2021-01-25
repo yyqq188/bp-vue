@@ -22,7 +22,7 @@
         </el-form>
         </div>
 
-        
+      
     </div>
 </template>
 <script>
@@ -122,4 +122,7 @@ export default {
     padding: 0 20px;
     box-sizing: border-box;
 }
+
+//style="position:absolute;bottom: 0;left: 50%;height: 30px;"
+
 </style>

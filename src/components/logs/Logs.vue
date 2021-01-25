@@ -22,7 +22,7 @@
 
 
             <el-table :data="JobLogsList"  border stripe>
-              <el-table-column align="center" fixed label="id" prop = "id"></el-table-column>
+              <el-table-column align="center" fixed type="index" label="#"></el-table-column>
               <el-table-column align="center" fixed label="jid" prop = "jid"></el-table-column>
               <el-table-column align="center" fixed label="name" prop = "name"></el-table-column>
               <el-table-column align="center" fixed label="state" prop = "state"></el-table-column>
@@ -60,6 +60,8 @@
 
 
         </el-card>
+        
+
 
 
     </div>
@@ -108,5 +110,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.el-table{
+    font-weight:700;
+}
 
 </style>

@@ -6,7 +6,7 @@
     <el-header>
         <div>
             <img src="../assets/1462750208.jpg" class="logo-image" alt="">
-            <span>FlinkSQL开发平台</span>
+            <h3>FlinkSQL开发平台</h3>
         </div>
         <el-button type="info" @click="logout">退出</el-button>
     </el-header>
@@ -89,7 +89,7 @@ export default {
                 return this.$message.error(res.meta.msg)
             }
             this.menulist = res.data
-            console.log(this.menulist);
+            // console.log(this.menulist);
             
         },
         //菜单的折叠展开

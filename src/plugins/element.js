@@ -32,7 +32,8 @@ import {
     Cascader,
     Select,
     Option,
-    Upload
+    Upload,
+    Link
 } from 'element-ui'
 
 
@@ -66,6 +67,7 @@ Vue.use(Cascader)
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(Upload)
+Vue.use(Link)
 
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

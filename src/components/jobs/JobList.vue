@@ -14,15 +14,12 @@
             <el-row :gutter="20">
                 <el-col :span="8">
                 <el-input placeholder="请输入内容" v-model="queryTaskInfo.query" clearable @clear="getTaskList">
-                    <el-button slot="append" icon="el-icon-search" @click="getTaskList"></el-button>
+                    <el-button slot="append" icon="el-icon-search" @click="getTaskListLike"></el-button>
                 </el-input>
                 </el-col>
-                <el-col :span="4">
-                <el-button type="primary" @click="addDialogVisible = true">添加任务</el-button>
-                </el-col>
             </el-row>
-
-            <el-table :data="TaskList">
+            
+            <el-table :data="taskList"> 
               <el-table-column align="center" label="id" prop="id"></el-table-column>
               <el-table-column align="center" label="任务名称" prop="taskName"></el-table-column>
               <el-table-column align="center" label="运行模式" prop="resourceMode"></el-table-column>
@@ -31,22 +28,26 @@
               <el-table-column align="center" label="操作">
                 <template slot-scope="scope">
                     <!-- 修改按钮 -->
-                    <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.id)"></el-button>
+                    <el-link class="el-linkstyle" type="primary" href="">运行</el-link>
+                    
                     <!-- 删除按钮 -->
-                    <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeUserById(scope.row.id)"></el-button>
-                
+                    <el-link type="danger" href="">停止</el-link>
+
                 </template> 
-
-
               </el-table-column>
-              
             </el-table>
-
-         
-
+            <!-- 分页区域 -->
+            <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="queryTaskInfo.page"
+                :page-sizes="[5, 10, 15, 20]"
+                :page-size="queryTaskInfo.size"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total" background>
+            </el-pagination>
 
         </el-card>
-
 
 
     </div>
@@ -63,20 +64,49 @@ export default {
                 page:1,
                 size:5
             },
-            TaskList:[]
+            taskList:[],
+            total:0
         }
     },
     created(){
         this.getTaskList()
     },
     methods:{
-        getTaskList(){
+        async getTaskList(){
+            const {data:res} =  await this.$http.get("gettaskinfos",{params:this.queryTaskInfo})
+            if(res.meta.status !== 200){
+                return this.$message.error("获取任务信息失败")
+            }
+            this.taskList = res.data.content
+            this.total = res.data.total
+            
+        },
+        //模糊分页查询
+        async getTaskListLike(){
+            const {data:res} =  await this.$http.get("gettaskinfos_like",{params:this.queryTaskInfo})
+            console.log(this.queryTaskInfo);
+            
+            if(res.meta.status !== 200){
+                return this.$message.error("获取任务信息失败")
+            }
+            this.taskList = res.data.content
+            this.total = res.data.total
             
         },
         showEditDialog(){
 
         },
-        removeUserById(){}
+        removeUserById(){
+
+        },
+        handleSizeChange(newSize){
+            this.queryTaskInfo.size = newSize
+            this.getTaskList()
+        },
+        handleCurrentChange(newPage){
+            this.queryTaskInfo.page = newPage
+            this.getTaskList()
+        }
     }
     
 }
@@ -84,5 +114,14 @@ export default {
 
 
 <style lang="less" scoped>
+
+.el-link{
+    margin-right: 20px;
+    font-weight: 700;
+
+}
+.el-table{
+    font-weight:700;
+}
 
 </style>
